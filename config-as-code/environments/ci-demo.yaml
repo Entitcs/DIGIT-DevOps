@@ -1,10 +1,10 @@
 global:
-  domain: <Domain> ## Add your Domain Name Eg: site.mydomain.com
+  domain: cicd.niwaspass.com ## Add your Domain Name Eg: site.mydomain.com
   setup: fullsetup
   
 cluster-configs:
   namespaces:
-    create: false
+    create: true
     values: [ jenkins, cert-manager ]
   root-ingress:
     namespace: jenkins
@@ -17,26 +17,26 @@ jenkins:
   persistence:
     enabled: true
     aws:
-      - volumeId: "vol-060d0b69accaf9312" # Add volume id for jenkins-home
+      - volumeId: "vol-0f6ab6b3e642f86b7" # Add volume id for jenkins-home
         zone: ap-south-1b # Add respective availability_zones 
 
   oauth:
     enabled: true
     acl:
       admin:
-        - egovernments*micro-service-devops # Add github team. Members of this team gets admin access on jenkins
+        - Entitcs*devops # Add github team. Members of this team gets admin access on jenkins
       user:                                 # Add github team. Members of this team gets login access on jenkins
-        - egovernments*micro-service-dev
+        - Entitcs*dev
         - egovernments*micro-service-qa
         - egovernments*micro-service-uat
        
 
   jobBuilder:    # Add jobBuilder repo's, add repo's ssh link
     repos: >-
-      'git@github.com:egovernments/core-services.git','git@github.com:egovernments/business-services.git'
+     'git@github.com:Entitcs/DIGIT-OSS.git'
   deploymentJobs:  # Setup deploymentJobs ACL 
     - name: dev    # deployment job name
-      acl: [egovernments*micro-service-dev] # GitHub team name, Members of the team get access to deployment job
+      acl: [Entitcs*dev] # GitHub team name, Members of the team get access to deployment job
     - name: qa
       acl: [egovernments*micro-service-qa] 
     - name: uat
@@ -70,14 +70,14 @@ cert-manager:
   clusterIssuer:
     stage:
       acme:
-        email: "<mail_id>"     # Add mail id
+        email: "khumesh.bramhe@entitcs.com"     # Add mail id
 
 cluster-autoscaler:
   namespace: jenkins
   cloudProvider: aws  
   awsRegion: ap-south-1
   autoDiscovery:
-    clusterName: <clusterName> # Add cluster name
+    clusterName: eks_cg-cicd # Add cluster name
     tags:
-    - kubernetes.io/cluster/<clusterName> # Add cluster name
+    - kubernetes.io/cluster/eks_cg-cicd # Add cluster name
 
